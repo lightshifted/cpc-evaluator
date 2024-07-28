@@ -42,7 +42,7 @@ class PrintUtils:
 
     @staticmethod
     def print_evaluation_results(dataset, stats, config):
-        log_folder = "evaluation_log"
+        log_folder = "evaluation_logs"
         os.makedirs(log_folder, exist_ok=True)
 
         timestamp = datetime.now()
@@ -51,6 +51,8 @@ class PrintUtils:
         )
 
         with open(log_file_path, "w") as log_file:
+            model_name = config.get("LLM", "openai_model")
+            random_state = config.get("EVAL", "random_state")
             # Add datetime to the beginning of the log
             datetime_str = timestamp.strftime("%Y-%m-%d %H:%M:%S")
             PrintUtils.print_and_log(
@@ -58,8 +60,6 @@ class PrintUtils:
                 log_file,
                 f"{PrintUtils.green('Evaluation DateTime:')} {datetime_str}\n",
             )
-
-            model_name = config.get("LLM", "openai_model")
 
             PrintUtils.print_and_log(
                 f"Num Samples: {dataset.shape[0]}",
@@ -70,6 +70,11 @@ class PrintUtils:
                 f"Model: {model_name}\n",
                 log_file,
                 f"{PrintUtils.green('Model:')} {model_name}\n",
+            )
+            PrintUtils.print_and_log(
+                f"Random State: {random_state}\n",
+                log_file,
+                f"{PrintUtils.green('Random State:')} {dataset.shape[0]}",
             )
 
             PrintUtils.print_and_log(
