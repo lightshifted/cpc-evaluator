@@ -1,0 +1,64 @@
+_type: prompt
+input_variables:
+  - query
+template: |
+  Your task is to compare the given string to the format template.
+  If the string's format does not match the template, adjust it to match.
+
+  **Format Template**:
+
+  ICD-10 Code:
+  - [Your ICD-10 Code] - [Description] (Justification: [Relevant section of the clinical note])
+
+  CPT Code:
+  - [Your CPT Code] - [Description] (Justification: [Relevant section of the clinical note])
+
+  **Example:**
+
+  **Given String:**
+  1. **R07.9 - Chest pain, unspecified**
+    - **Justification:** "Chest pain: The patient is sitting in admitted observation status on the medical floor for close monitoring..."
+    - [Link to Codify](https://www.aapc.com/codes/icd-10-codes/R07.9)
+
+  2. **R79.1 - Abnormal coagulation profile**
+    - **Justification:** "Elevated D-dimer: CTA chest negative for PE..."
+    - [Link to Codify](https://www.aapc.com/codes/icd-10-codes/R79.1)
+
+  3. **R73.9 - Hyperglycemia, unspecified**
+    - **Justification:** "Hyperglycemia: Denies history of diabetes; hemoglobin A1c is pending."
+    - [Link to Codify](https://www.aapc.com/codes/icd-10-codes/R73.9)
+
+  4. **I10 - Essential (primary) hypertension**
+    - **Justification:** "Hypertension: No acute issues, resume home lisinopril."
+    - [Link to Codify](https://www.aapc.com/codes/icd-10-codes/I10)
+
+  ## CPT Code:
+
+  1. **99235 - Observation or inpatient hospital care, for the evaluation and management of a patient, including admission and discharge on the same date**
+    - **Justification:** "The patient is sitting in admitted observation status on the medical floor for close monitoring..."
+    - [Link to Codify](https://www.aapc.com/codes/cpt-codes/99235)
+
+  **Formatted Response:**
+  Here are the codes I've found related to the clinical phrase:
+
+  ICD-10 Code:
+  - R07.9 - Chest pain, unspecified (Justification: "Chest pain: The patient is sitting in admitted observation status on the medical floor for close monitoring...")
+    [Link to Codify](https://www.aapc.com/codes/icd-10-codes/R07.9)
+
+  - R79.1 - Abnormal coagulation profile (Justification: "Elevated D-dimer: CTA chest negative for PE...")
+    [Link to Codify](https://www.aapc.com/codes/icd-10-codes/R79.1)
+
+  - R73.9 - Hyperglycemia, unspecified (Justification: "Hyperglycemia: Denies history of diabetes; hemoglobin A1c is pending.")
+    [Link to Codify](https://www.aapc.com/codes/icd-10-codes/R73.9)
+
+  - I10 - Essential (primary) hypertension (Justification: "Hypertension: No acute issues, resume home lisinopril.")
+    [Link to Codify](https://www.aapc.com/codes/icd-10-codes/I10)
+
+  CPT Code:
+  - 99235 - Observation or inpatient hospital care, for the evaluation and management of a patient, including admission and discharge on the same date (Justification: "The patient is sitting in admitted observation status on the medical floor for close monitoring...")
+    [Link to Codify](https://www.aapc.com/codes/cpt-codes/99235)
+
+  Now it's your turn!
+
+  GIVEN STRING:
+  {query}

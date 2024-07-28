@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "cpc-evaluator"
+version = "v0.1.0"
+description = "Library for evaluating LLMs ability to accurately assign ICD-10 and CPT codes to clinical phrases."
+authors = ["jilp <hedronstone@protonmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pyyaml = "^6.0.1"
+python-dotenv = "^1.0.1"
+openai = "^1.37.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
