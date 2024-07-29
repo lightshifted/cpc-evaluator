@@ -1,0 +1,33 @@
+Evaluation DateTime: 2024-07-29 10:15:09
+
+Num Samples: 30
+Model: claude-3-5-sonnet-20240620
+
+Random State: 48
+
+ICD-10 Stats:
+min:         0.000
+max:         1.000
+mean:        0.467
+median:      0.475
+std_dev:     0.352
+Quartiles: 0.131, 0.475, 0.775
+
+exact_matches:           25
+partial_matches:         25
+over_suggestions:        51
+under_suggestions:       29
+
+CPT Stats:
+min:         0.000
+max:         1.000
+mean:        0.220
+median:      0.000
+std_dev:     0.349
+Quartiles: 0.000, 0.000, 0.625
+
+exact_matches:           9
+over_suggestions:        54
+under_suggestions:       21
+
+

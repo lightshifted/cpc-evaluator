@@ -1,0 +1,38 @@
+Evaluation DateTime: 2024-07-29 10:11:30
+
+Num Samples: 30
+Model: gpt-4o-mini
+
+Random State: 48
+
+ICD-10 Stats:
+min:         0.000
+max:         1.000
+mean:        0.464
+median:      0.463
+std_dev:     0.375
+Quartiles: 0.081, 0.463, 0.756
+
+exact_matches:           27
+partial_matches:         24
+over_suggestions:        47
+under_suggestions:       28
+precision:               14.467857142857143
+recall:                  16.291666666666668
+f1_score:                14.997546897546894
+
+CPT Stats:
+min:         0.000
+max:         1.000
+mean:        0.097
+median:      0.000
+std_dev:     0.250
+Quartiles: 0.000, 0.000, 0.000
+
+exact_matches:           6
+over_suggestions:        63
+under_suggestions:       24
+precision:               2.783333333333333
+recall:                  6.0
+f1_score:                3.5666666666666664
+

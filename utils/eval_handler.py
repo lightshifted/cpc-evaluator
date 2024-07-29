@@ -13,10 +13,12 @@ import pandas as pd
 import pytz
 import tiktoken
 import yaml
+import re
 from datasets import load_dataset
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_random_exponential
 from tqdm import tqdm
+from anthropic import Anthropic
 
 try:
     from print_handler import PrintUtils
@@ -136,30 +138,28 @@ class EvalHandler(EvalDataHandler):
     def __init__(self):
         super().__init__()
         self.openai_client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.anthropic_client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-    @staticmethod
-    @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(6))
-    def _get_openai_completion(
-        prompt: str, model_name=config.get("EVAL", "openai_model")
-    ):
-        response = EvalHandler.openai_client.chat.completions.create(
-            model=model_name, messages=[{"role": "user", "content": prompt}]
-        )
-        return json.loads(response.model_dump_json())
-
-    def _process_row(self, index, row, prompt):
+    def _process_row(self, index, row, prompt, provider=config.get("EVAL", "provider")):
         user_query = row["user_query"]
         icd_code, cpt_code = row["gt_icd"], row["gt_cpt"]
         prompt_template = prompt.get("template").format(
             user_query=user_query, icd_labels=icd_code, cpt_labels=cpt_code
         )
-        completion = (
-            EvalHandler.get_openai_completion(prompt_template)
-            .get("choices")[0]
-            .get("message")
-            .get("content")
-        )
-        return index, completion
+        if provider == "openai":
+            completion = (
+                EvalHandler.get_openai_completion(prompt_template)
+                .get("choices")[0]
+                .get("message")
+                .get("content")
+            )
+            return index, completion
+        elif provider == "anthropic":
+            completion = (
+                EvalHandler.get_anthropic_completion(prompt_template)
+            )
+            return index, completion
+
 
     def _generator(self, file_name: str):
 
@@ -196,8 +196,14 @@ class EvalHandler(EvalDataHandler):
             # Get random state
             random_state = int(config.get("EVAL", "random_state"))
 
-            model_name = config.get("EVAL", "openai_model")
-            file_name = f"{model_name}_evaluation_{date_string}_{random_state}.xlsx"
+            if config.get("EVAL", "provider") == "openai":
+                model_name = config.get("EVAL", "openai_model")
+            elif config.get("EVAL", "provider") == "anthropic":
+                model_name = config.get("EVAL", "anthropic_model")
+
+            evaluation_folder = "./evaluation_data"
+            os.makedirs(evaluation_folder, exist_ok=True)
+            file_name = f"evaluation_data/{model_name}_evaluation_{date_string}_{random_state}.xlsx"
 
             dataset.to_excel(file_name, index=False)
 
@@ -488,6 +494,20 @@ class EvalUtils(CPTEvalUtils, ICDEvalUtils):
             model=model_name, messages=[user_message]
         )
         return json.loads(response.model_dump_json())
+
+    @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(6))
+    def get_anthropic_completion(self, prompt: str, model_name: str = "claude-3-5-sonnet-20240620"):
+        message = EvalHandler().anthropic_client.messages.create(
+            max_tokens=768,
+            messages = [
+                {
+                    'role': 'user',
+                    'content': prompt
+                }
+            ],
+            model=model_name
+        )
+        return message
 
     def process_row(self, row, prompt_template):
         query = row.model_response

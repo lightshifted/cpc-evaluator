@@ -14,12 +14,13 @@ class PrintUtils:
         return f"{Fore.CYAN}{text}{Style.RESET_ALL}"
 
     @staticmethod
-    def format_stats(stat_dict, color_func=None):
+    def format_stats(stat_dict, color_func=None, for_log=False):
         lines = []
         for key, value in stat_dict.items():
             if key != "quartiles":
-                key_str = color_func(f"{key}:") if color_func else f"{key}:"
-                lines.append(f"{key_str:<12} {value:.3f}")
+                if not for_log or key not in ["precision", "recall", "f1_score"]:
+                    key_str = color_func(f"{key}:") if color_func else f"{key}:"
+                    lines.append(f"{key_str:<12} {value:.3f}")
 
         quartiles_key = color_func("Quartiles:") if color_func else "Quartiles:"
         quartiles_value = ", ".join([f"{q:.3f}" for q in stat_dict["quartiles"]])
@@ -51,7 +52,10 @@ class PrintUtils:
         )
 
         with open(log_file_path, "w") as log_file:
-            model_name = config.get("LLM", "openai_model")
+            if config.get("EVAL", "provider") == "openai":
+                model_name = config.get("EVAL", "openai_model")
+            elif config.get("EVAL", "provider") == "anthropic":
+                model_name = config.get("EVAL", "anthropic_model")
             random_state = config.get("EVAL", "random_state")
             # Add datetime to the beginning of the log
             datetime_str = timestamp.strftime("%Y-%m-%d %H:%M:%S")
