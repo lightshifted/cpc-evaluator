@@ -162,9 +162,14 @@ class EvalHandler(EvalDataHandler):
 
 
     def _generator(self, file_name: str):
+        provider = config.get("EVAL", "provider")
+        if provider == "openai":
+            prompt_path =  config.get("LLM", "phrase_cleaner_prompt_openai")
+        elif provider == "anthropic":
+            prompt_path = config.get("LLM", "phrase_cleaner_prompt_anthropic")
 
         eval_df = Evaluator().run_evaluation(
-            file_name, "./prompts/phrase_cleaner.yml"
+            file_name, prompt_path
         )
         icd_stats = Evaluator.stats(eval_df, code_type="icd10")
         cpt_stats = Evaluator.stats(eval_df, code_type="cpt")
@@ -618,7 +623,10 @@ class Evaluator(EvalUtils):
 
     @staticmethod
     def truncate_column(df, column_name, max_length=5):
-        df[column_name] = df[column_name].str[:max_length]
+        try:
+            df[column_name] = df[column_name].str[:max_length]
+        except AttributeError:
+            return df
         return df
 
     def run_evaluation(self, df_path, prompt_path):

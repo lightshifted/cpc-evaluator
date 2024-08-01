@@ -1,5 +1,6 @@
 .env
 __pycache__/
 data/
-evaluation_log/
+evaluation_logs/
+evaluation_data/
 *.xlsx

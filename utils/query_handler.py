@@ -9,22 +9,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+try:
+    from eval_handler import EvalUtils
+except ModuleNotFoundError:
+    from utils.eval_handler import EvalUtils
 
-class QueryHandler:
+
+class QueryHandler(EvalUtils):
     def __init__(self):
+        super().__init__()
         self.config = configparser.ConfigParser()
         self.config.read("./config.ini")
         self.openai_client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-    def get_openai_completion(
-        self,
-        prompt: str,
-    ) -> Dict[str, Any]:
-        model_name = self.config.get("LLM", "openai_model")
-        response = self.openai_client.chat.completions.create(
-            model=model_name, messages=[{"role": "user", "content": prompt}]
-        )
-        return json.loads(response.model_dump_json())
 
     def _load_prompt(self, prompt_path: str) -> Dict[str, Any]:
         with open(prompt_path, "r") as file:
@@ -33,11 +29,11 @@ class QueryHandler:
     def query(
         self,
         query: str,
-        provider: str = "openai",
     ):
+        provider = self.config.get("EVAL", "provider")
         if provider == "openai":
             prompt = (
-                self._load_prompt(self.config.get("LLM", "clinical_phrase_prompt"))
+                self._load_prompt(self.config.get("LLM", "clinical_phrase_prompt_openai"))
                 .get("template")
                 .format(query=query)
             )
@@ -49,6 +45,17 @@ class QueryHandler:
                 .get("content")
             )
 
+            return [{"content": response}]
+
+        elif provider == "anthropic":
+            prompt = (
+                self._load_prompt(
+                    self.config.get("LLM", "clinical_phrase_prompt_anthropic"))
+                    .get("template")
+                    .format(query=query)
+            )
+
+            response = self.get_anthropic_completion(prompt)
             return [{"content": response}]
 
 

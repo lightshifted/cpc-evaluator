@@ -85,7 +85,7 @@ class PrintUtils:
                 "ICD-10 Stats:", log_file, PrintUtils.green("ICD-10 Stats:")
             )
             PrintUtils.print_and_log(
-                PrintUtils.format_stats(stats[0]),
+                PrintUtils.format_stats(stats[0], for_log=True),
                 log_file,
                 PrintUtils.format_stats(stats[0], PrintUtils.green),
             )
@@ -101,7 +101,7 @@ class PrintUtils:
                 "CPT Stats:", log_file, PrintUtils.cyan("CPT Stats:")
             )
             PrintUtils.print_and_log(
-                PrintUtils.format_stats(stats[2]),
+                PrintUtils.format_stats(stats[2], for_log=True),
                 log_file,
                 PrintUtils.format_stats(stats[2], PrintUtils.cyan),
             )

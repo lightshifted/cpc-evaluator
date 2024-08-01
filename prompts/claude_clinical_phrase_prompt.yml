@@ -1,10 +1,11 @@
 _type: prompt
 input_variables:
+  - query
 template: |
   You are a medical coding assistant. Your task is to generate relevant ICD-10 and CPT codes from the given clinical note phrase snippet. Here is the clinical note you will be working with:
 
   <clinical_note>
-  {{CLINICAL_NOTE}
+  {query}
   </clinical_note>
 
   Follow these steps to complete the task:

@@ -1,0 +1,39 @@
+_type: prompt
+input_variables:
+ - query
+template: |
+  You are tasked with comparing a given string to a format template and adjusting it if necessary. Follow these instructions carefully:
+
+  1. Here is the format template you should use as a reference:
+
+  <format_template>
+  ICD-10 Code:
+  - [Your ICD-10 Code] - [Description] (Justification: [Relevant section of the clinical note])
+
+  CPT Code:
+  - [Your CPT Code] - [Description] (Justification: [Relevant section of the clinical note])
+  </format_template>
+
+  2. Now, here is the given string that needs to be compared and potentially adjusted:
+
+  <given_string>
+  {query}
+  </given_string>
+
+  3. Compare the given string to the format template. Pay close attention to:
+    - The overall structure (ICD-10 Codes followed by CPT Codes)
+    - The format of each code entry (code, description, justification)
+    - The presence and format of any links
+
+  4. If the given string does not match the format template, adjust it using these steps:
+    a. Separate ICD-10 Codes and CPT Codes into distinct sections
+    b. For each code entry:
+        - Ensure the code and its description are on the same line
+        - Format the justification in parentheses, starting with "Justification:"
+        - If present, move any links to a new line below the code entry
+    c. Remove any numbering or bullet points
+    d. Ensure there's a blank line between each code entry for readability
+
+  5. Provide your formatted response. It should strictly follow the format template while preserving all the original information from the given string. Write your response inside <formatted_response> tags.
+
+  Remember, your goal is to make the given string conform to the format template without losing any information. If the given string already matches the template perfectly, simply state that no adjustments were necessary.
